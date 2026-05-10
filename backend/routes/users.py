@@ -21,7 +21,12 @@ def create_user():
     if display_name is not None:
         display_name = str(display_name).strip() or None
 
-    user = User(username=username, display_name=display_name)
+    password = None
+    if "password" in data:
+        p = data.get("password")
+        password = None if p is None else str(p)
+
+    user = User(username=username, display_name=display_name, password=password)
     db.session.add(user)
     try:
         db.session.commit()
@@ -65,6 +70,10 @@ def update_user(user_id):
     if "display_name" in data:
         dn = data.get("display_name")
         user.display_name = None if dn is None else (str(dn).strip() or None)
+
+    if "password" in data:
+        p = data.get("password")
+        user.password = None if p is None else str(p)
 
     try:
         db.session.commit()
